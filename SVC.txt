@@ -1,0 +1,24 @@
+import pandas as pd
+import numpy as np
+from sklearn.svm import SVC
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+data=pd.read_csv('glass(For SVM Program).csv')
+X=data.drop("Type",axis=1)
+Y=data.Type
+xtrain,xtest,ytrain,ytest=train_test_split(X,Y,test_size=0.25)
+model1=SVC(kernel="rbf")
+model2=SVC(kernel="poly",degree=3)
+model3=SVC(kernel="sigmoid",gamma=0.001)
+model1.fit(xtrain,ytrain)
+model2.fit(xtrain,ytrain)
+model3.fit(xtrain,ytrain)
+ypred1=model1.predict(xtest)
+ypred2=model2.predict(xtest)
+ypred3=model3.predict(xtest)
+a=accuracy_score(ytest,ypred1)
+b=accuracy_score(ytest,ypred2)
+c=accuracy_score(ytest,ypred3)
+print(a)
+print(b)
+print(c)

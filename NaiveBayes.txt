@@ -1,0 +1,61 @@
+#part b 1st program naive bayes
+import pandas as pd
+import numpy as np
+from sklearn import preprocessing
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import classification_report, accuracy_score 
+from sklearn.model_selection import train_test_split
+data=pd.read_csv("covid.csv")
+data
+le=preprocessing.LabelEncoder()
+pc=le.fit_transform(data['pc'].values)
+wbc=le.fit_transform(data['wbc'].values)
+mc=le.fit_transform(data['mc'].values)
+ast=le.fit_transform(data['ast'].values)
+bc=le.fit_transform(data['bc'].values)
+ldh=le.fit_transform(data['ldh'].values)
+y=le.fit_transform(data['diagnosis'].values)
+X=np.array(list(zip(pc,wbc,ast,bc,ldh)))
+X 
+array=([[1, 1, 0, 1, 1],
+       [1, 1, 0, 1, 0],
+       [1, 0, 0, 1, 1],
+       [1, 0, 0, 0, 1],
+       [1, 2, 0, 1, 1],
+       [1, 2, 0, 1, 0],
+       [2, 1, 0, 1, 1],
+       [2, 0, 0, 1, 1],
+       [2, 0, 0, 0, 0],
+       [2, 2, 0, 1, 1],
+       [2, 2, 0, 1, 0],
+       [0, 1, 1, 1, 1],
+       [0, 2, 1, 1, 1],
+       [0, 2, 1, 0, 0],
+       [0, 0, 1, 1, 0],
+       [1, 2, 0, 0, 1],
+       [2, 2, 0, 0, 1],
+       [0, 1, 1, 1, 0],
+       [2, 2, 0, 1, 1],
+       [2, 0, 0, 1, 0],
+       [2, 1, 0, 1, 0],
+       [1, 0, 0, 0, 0],
+       [1, 1, 0, 0, 0],
+       [0, 0, 1, 1, 1],
+       [0, 2, 1, 1, 1]])
+xtrain,xtest,ytrain,ytest=train_test_split(X,y,test_size=0.25)
+naivee=MultinomialNB()
+naivee.fit(xtrain,ytrain)
+ypred=naivee.predict(xtest)
+ypred
+accuracy_score(ytest,ypred)
+classification_report(ytest,ypred)
+from sklearn.metrics import roc_curve
+lr_prob=naivee.predict_proba(xtest)
+lr_prob=lr_prob[:,1]
+lr_fpr,lr_tpr, _=roc_curve(ytest,lr_prob)
+from matplotlib import pyplot
+pyplot.plot(lr_fpr,lr_tpr,marker='.',label='Naive Bayes Classifier')
+pyplot.xlabel("False positive rate")
+pyplot.ylabel("True positive rate")
+pyplot.legend()
+pyplot.show()
